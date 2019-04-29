@@ -8,6 +8,7 @@ const jsonParser = bodyParser.json();
 
 const {DATABASE_URL, PORT} = require('./config');
 
+app.use(express.static('public'));
 app.use('/sports/api', jsonParser, sportsRouter);
 
 let server;

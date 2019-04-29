@@ -132,6 +132,61 @@ router.put('/update-sport/:id', (req, res, next) => {
 	}
 });
 
+router.delete('/remove-sport/:id', (req, res) => {
+	let requiredFields = ['id'];
+
+	for ( let i = 0; i < requiredFields.length; i ++){
+		let currentField = requiredFields[i];
+
+		if (! (currentField in req.body)){
+			res.status(406).json({
+				message : `Missing field ${currentField} in body.`,
+				status : 406
+			});
+
+			next();
+		}
+	}
+	let sportId = req.params.id;
+
+	if (sportId){
+		if(sportId == req.body.id){
+
+			ListSports.delete(sportId)
+				.then(sport => {
+					res.status(204).json({
+						message : "Successfully deleted the sport",
+						status : 204,
+						sport : sport
+					});
+				})
+				.catch(err => {
+					res.status(404).json({
+						message : "Sport not found in the list",
+						status : 404
+					}).send("Finish");
+				})
+	
+		}
+		else{
+			res.status(400).json({
+				message : "Param and body do not match",
+				status : 400
+			});
+
+			next();
+		}
+	}
+	else{
+		res.status(406).json({
+			message : "Missing param 'id'",
+			status : 406
+		});
+
+		next();
+	}
+});
+
 module.exports = router;
 
 /*
